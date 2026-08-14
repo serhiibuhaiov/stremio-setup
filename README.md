@@ -22,6 +22,7 @@ comet-torrserver-bridge → TorrServer (does the actual P2P download/streaming)
 ## Setup
 
 1. `docker compose up -d`
+   - On a Linux host with an Intel iGPU (e.g. N100), add hardware transcoding for Stremio's streaming server via the override file: `docker compose -f docker-compose.yml -f docker-compose.hwaccel.yml up -d`. Requires `intel-media-va-driver-non-free` installed on the host first (`sudo apt install intel-media-va-driver-non-free vainfo`, then check `vainfo` lists the expected profiles). **Do not use this override on macOS/Docker Desktop** — `/dev/dri` doesn't exist there and the `stremio` container will fail to start.
    - `comet` waits for Jackett to generate its own API key (`jackett-config/Jackett/ServerConfig.json`) and reads it automatically at startup (`scripts/wait-for-jackett-key.sh`) — nothing to copy by hand.
 2. Open `http://localhost:9117`, add the Toloka indexer manually (login/password — Jackett has no API for this, it's a one-time setup step tied to your Toloka account).
 3. In Stremio, install the addons from their manifest URLs (Settings → Addons → "Search or paste link"). Each browser/account/device needs this done once — it's not shared automatically.
