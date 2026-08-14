@@ -18,6 +18,7 @@ comet-torrserver-bridge → TorrServer (does the actual P2P download/streaming)
 | `comet` | `g0ldyy/comet` | 8000 | Searches Jackett, returns Stremio-compatible stream lists |
 | `torrserver` | `ghcr.io/yourok/torrserver` | 8090 | Real torrent client; turns a torrent into an HTTP stream |
 | `comet-torrserver-bridge` | [`comet-torrserver-bridge-stremio-addon`](https://github.com/serhiibuhaiov/comet-torrserver-bridge-stremio-addon) | 7100 | Rewrites Comet's results into direct TorrServer play URLs |
+| `db-viewer` | `coleifer/sqlite-web` | 8091 | Browse/edit Comet's `comet.db` cache directly — useful for clearing stale search results |
 
 ## Setup
 

@@ -94,6 +94,19 @@ services:
     networks:
       - stremio-net
 
+  db-viewer:
+    image: coleifer/sqlite-web:latest
+    container_name: comet-db-viewer
+    restart: unless-stopped
+    ports:
+      - "8091:8080"
+    environment:
+      SQLITE_DATABASE: /data/comet.db
+    volumes:
+      - ${HOME}/stremio-setup-data/comet:/data
+    networks:
+      - stremio-net
+
 networks:
   stremio-net:
     name: stremio-net
