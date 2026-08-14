@@ -1,0 +1,96 @@
+services:
+  stremio:
+    image: tsaridas/stremio-docker:latest
+    container_name: stremio
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      NO_CORS: "1"
+      AUTO_SERVER_URL: "1"
+    volumes:
+      - ${HOME}/stremio-setup-data/stremio:/root/.stremio-server
+    networks:
+      - stremio-net
+
+  jackett:
+    image: linuxserver/jackett:latest
+    container_name: jackett
+    restart: unless-stopped
+    ports:
+      - "9117:9117"
+    volumes:
+      - ${HOME}/stremio-setup-data/jackett:/config
+    networks:
+      - stremio-net
+
+  jackett-throttle:
+    image: ghcr.io/serhiibuhaiov/jackett-throttle-proxy:latest
+    container_name: jackett-throttle
+    restart: unless-stopped
+    depends_on:
+      - jackett
+    ports:
+      - "9119:9119"
+    environment:
+      JACKETT_UPSTREAM: jackett:9117
+    networks:
+      - stremio-net
+
+  comet:
+    image: g0ldyy/comet:latest
+    container_name: comet
+    restart: unless-stopped
+    depends_on:
+      - jackett-throttle
+    ports:
+      - "8000:8000"
+    entrypoint: ["/bin/sh", "/wait-for-jackett-key.sh"]
+    environment:
+      DATABASE_TYPE: sqlite
+      SCRAPE_JACKETT: live
+      JACKETT_URL: http://jackett-throttle:9119
+      DOWNLOAD_TORRENT_FILES: "True"
+      DOWNLOAD_GENERIC_TRACKERS: "True"
+      GET_TORRENT_TIMEOUT: 100
+      LIVE_SCRAPE_TIMEOUT: 90
+      ANIME_MAPPING_ENABLED: "False"
+    volumes:
+      - ${HOME}/stremio-setup-data/comet:/app/data
+      - ${HOME}/stremio-setup-data/jackett:/jackett-config:ro
+      - ./scripts/wait-for-jackett-key.sh:/wait-for-jackett-key.sh:ro
+    networks:
+      - stremio-net
+
+  torrserver:
+    image: ghcr.io/yourok/torrserver:latest
+    container_name: torrserver
+    restart: unless-stopped
+    ports:
+      - "8090:8090"
+    environment:
+      TS_PORT: 8090
+      TS_DONTKILL: 1
+    volumes:
+      - ${HOME}/stremio-setup-data/torrserver:/opt/ts
+    networks:
+      - stremio-net
+
+  comet-torrserver-bridge:
+    image: ghcr.io/serhiibuhaiov/comet-torrserver-bridge-stremio-addon:latest
+    container_name: comet-torrserver-bridge
+    restart: unless-stopped
+    depends_on:
+      - comet
+      - torrserver
+    ports:
+      - "7100:7100"
+    environment:
+      COMET_BASE_URL: http://comet:8000
+      TORRSERVER_URL: http://torrserver:8090
+    networks:
+      - stremio-net
+
+networks:
+  stremio-net:
+    name: stremio-net
