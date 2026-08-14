@@ -1,6 +1,6 @@
 {
   "BitTorr": {
-    "CacheSize": 1073741824,
+    "CacheSize": 536870912,
     "ConnectionsLimit": 25,
     "DisableDHT": false,
     "DisablePEX": false,
