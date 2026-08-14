@@ -68,11 +68,14 @@ services:
     restart: unless-stopped
     ports:
       - "8090:8090"
+    entrypoint: ["/bin/sh", "/seed-torrserver-settings.sh"]
     environment:
       TS_PORT: 8090
       TS_DONTKILL: 1
     volumes:
       - ${HOME}/stremio-setup-data/torrserver:/opt/ts
+      - ./scripts/seed-torrserver-settings.sh:/seed-torrserver-settings.sh:ro
+      - ./scripts/torrserver-settings.template.json:/torrserver-settings.template.json:ro
     networks:
       - stremio-net
 
