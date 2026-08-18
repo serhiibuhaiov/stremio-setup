@@ -1,0 +1,23 @@
+http://stremio.lan {
+	reverse_proxy stremio:8080
+}
+
+http://jackett.lan {
+	reverse_proxy jackett:9117
+}
+
+http://torrserver.lan {
+	reverse_proxy torrserver:8090
+}
+
+http://comet.lan {
+	reverse_proxy comet:8000
+}
+
+http://comet-torrserver-bridge.lan {
+	reverse_proxy comet-torrserver-bridge:7100
+}
+
+http://comet-dbviewer.lan {
+	reverse_proxy db-viewer:8080
+}
