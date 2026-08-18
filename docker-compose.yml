@@ -55,6 +55,7 @@ services:
       GET_TORRENT_TIMEOUT: 100
       LIVE_SCRAPE_TIMEOUT: 90
       ANIME_MAPPING_ENABLED: "False"
+      INDEXER_MANAGER_UPDATE_INTERVAL: 120
     volumes:
       - ${HOME}/stremio-setup-data/comet:/app/data
       - ${HOME}/stremio-setup-data/jackett:/jackett-config:ro
