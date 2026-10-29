@@ -54,7 +54,6 @@ services:
       DOWNLOAD_GENERIC_TRACKERS: "True"
       GET_TORRENT_TIMEOUT: 360
       LIVE_SCRAPE_TIMEOUT: 360
-      ANIME_MAPPING_ENABLED: "False"
       INDEXER_MANAGER_UPDATE_INTERVAL: 120
     volumes:
       - ${HOME}/stremio-setup-data/comet:/app/data
